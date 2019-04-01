@@ -1,6 +1,4 @@
 
-
-
 class Piece
  
 attr_reader :piece 
@@ -14,7 +12,9 @@ end
 
 class NullPiece < Piece
 
-  def initialize 
+  attr_reader :null_piece
 
+  def initialize(value=nil)
+    @null_piece = value
   end 
 end 
