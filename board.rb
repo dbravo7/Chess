@@ -1,12 +1,22 @@
 require "byebug"
 require_relative "piece"
+require_relative "display"
 
 class Board
+
+  attr_reader :board, :display 
 
   def initialize 
     @board = board
     populate_grid(@board)
+    @display = Display.new(@board)
+    # move_piece([0,0],[4,2])
+    display_test_loop
     debugger 
+  end 
+
+  def display_test_loop
+    display.render
   end 
 
   def [](pos)
@@ -15,7 +25,9 @@ class Board
   end 
 
   def []=(pos, value) 
-    @board[pos] = value 
+    x, y = pos
+    @board[x][y] = value 
+    self[pos].position = pos  
   end 
 
   def board 
@@ -26,18 +38,19 @@ class Board
     board.each_with_index do |subArr, row|
      board.each_with_index do |ele, col|
         if row <= 1 || row >= 6
-          board[row][col] = Piece.new 
+          board[row][col] = Piece.new("1", [row, col]) 
         else
-          board[row][col] = NullPiece.new 
+          board[row][col] = NullPiece.new("4", [row, col]) 
         end
       end 
     end 
     board 
   end 
+
   def valid_move(start, end_pos)
-    if self[start].is_a?(NullPiece)
+    if self[start].is_a?(NullPiece)  
       raise "There is no piece at this start position" 
-    elsif self[end_pos].is_a?(Piece)
+    elsif !self[end_pos].is_a?(NullPiece)
       raise "The end_pos is already occupied by a piece"
     end 
   end 
@@ -45,18 +58,18 @@ class Board
   def move_piece(start_pos, end_pos)
     begin 
       valid_move(start_pos, end_pos) 
-      self[end_pos] = self[start_pos] 
+      self[start_pos], self[end_pos] = self[end_pos], self[start_pos]
     rescue ArgumentError
       puts "Please input new coordinates"
-      debugger 
       retry 
     end
- #This should update the 2D grid and also the moved piece's position. 
- #You'll want to raise an exception if:
+  #This should update the 2D grid and also the moved piece's position. 
+  #You'll want to raise an exception if:
 
-#there is no piece at start_pos or
-#the piece cannot move to end_pos.
+  #there is no piece at start_pos or
+  #the piece cannot move to end_pos.
   end 
+ 
 
 end 
 

@@ -1,3 +1,4 @@
+require 'colorize'
 require "io/console"
 
 KEYMAP = {
@@ -32,12 +33,17 @@ MOVES = {
 
 class Cursor
 
-  attr_reader :cursor_pos, :board
+  attr_reader :cursor_pos, :board, :selected 
 
   def initialize(cursor_pos, board)
     @cursor_pos = cursor_pos
     @board = board
+    @selected = false 
   end
+
+  def cursor_pos
+    @cursor_pos
+  end 
 
   def get_input
     key = KEYMAP[read_char]
@@ -78,18 +84,39 @@ class Cursor
   def handle_key(key)
     case key 
     when :return, :space 
+      debugger 
+      toggle_selected
       return @cursor_pos
     when :left, :right, :up, :down
-      update_pos(MOVES[key]) 
+      diff = position_difference(MOVES[key])
+      update_pos(diff)
       return nil 
-    when :crl_c 
+    when :ctrl_c 
       Process.exit(0)
     end 
   end
 
+  def position_difference(pos)
+    x, y = pos 
+    x_pos, y_pos = @cursor_pos
+    new_pos = [x_pos + x ,y_pos + y]
+    new_pos
+  end 
+
   def update_pos(diff)
-    if board.valid_pos(diff)
-      @cursor_pos = diff 
+    if valid_pos?(diff)
+      @cursor_pos = diff
+    else 
+      get_input
     end 
   end
+
+  def toggle_selected
+    @selected == false ? @selected = true : @selected = false 
+  end 
+
+  def valid_pos?(pos)
+    x, y = pos
+    x >= 0 && x <= 7 && y >= 0 && y <= 7
+  end 
 end
