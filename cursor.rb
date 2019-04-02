@@ -84,7 +84,6 @@ class Cursor
   def handle_key(key)
     case key 
     when :return, :space 
-      debugger 
       toggle_selected
       return @cursor_pos
     when :left, :right, :up, :down

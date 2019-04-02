@@ -1,5 +1,5 @@
 require "byebug"
-require_relative "piece"
+require_relative "pieces"
 require_relative "display"
 
 class Board
@@ -8,11 +8,11 @@ class Board
 
   def initialize 
     @board = board
+    @sentinel = NullPiece.instance 
     populate_grid(@board)
     @display = Display.new(@board)
     # move_piece([0,0],[4,2])
     display_test_loop
-    debugger 
   end 
 
   def display_test_loop
@@ -31,16 +31,14 @@ class Board
   end 
 
   def board 
-    board = Array.new(8) {Array.new(8)}
+    board = Array.new(8) {Array.new(8, sentinel)}
   end 
 
   def populate_grid(board)
     board.each_with_index do |subArr, row|
      board.each_with_index do |ele, col|
         if row <= 1 || row >= 6
-          board[row][col] = Piece.new("1", [row, col]) 
-        else
-          board[row][col] = NullPiece.new("4", [row, col]) 
+          board[row][col] = Piece.new([row, col], @board.dup) 
         end
       end 
     end 
@@ -63,11 +61,6 @@ class Board
       puts "Please input new coordinates"
       retry 
     end
-  #This should update the 2D grid and also the moved piece's position. 
-  #You'll want to raise an exception if:
-
-  #there is no piece at start_pos or
-  #the piece cannot move to end_pos.
   end 
  
 
