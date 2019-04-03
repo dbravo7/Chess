@@ -17,13 +17,13 @@ attr_reader :cursor_pos, :board
         rendered = []
       subArr.each_with_index do |piece, y|
         if @cursor.cursor_pos == piece.position && @cursor.selected == false 
-          rendered << piece.piece.to_s.colorize(:background=>:light_blue) 
+          rendered << piece.to_s.colorize(:background=>:light_blue) 
         elsif @cursor.cursor_pos == piece.position && @cursor.selected == true 
-            rendered << piece.piece.to_s.colorize(:background=>:light_red)   
+            rendered << piece.to_s.colorize(:background=>:light_red)   
         elsif row.even? && y.odd? || row.odd? && y.even? 
-          rendered << piece.piece.to_s.colorize(:background=>:light_green)
+          rendered << piece.to_s.colorize(:background=>:light_green)
         else
-          rendered << piece.piece.to_s(:background=>:light_yellow)
+          rendered << piece.to_s.colorize(:background=>:light_yellow)
         end 
         end 
       puts "#{row + 1}".colorize(:cyan) + "|" + rendered.join(" ")

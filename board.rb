@@ -7,8 +7,8 @@ class Board
   attr_reader :board, :display 
 
   def initialize 
-    @board = board
     @sentinel = NullPiece.instance 
+    @board = board
     populate_grid(@board)
     @display = Display.new(@board)
     # move_piece([0,0],[4,2])
@@ -30,15 +30,19 @@ class Board
     self[pos].position = pos  
   end 
 
+  def empty?(pos)
+    self[pos].empty? 
+  end 
+
   def board 
-    board = Array.new(8) {Array.new(8, sentinel)}
+    board = Array.new(8) {Array.new(8, @sentinel)} 
   end 
 
   def populate_grid(board)
     board.each_with_index do |subArr, row|
      board.each_with_index do |ele, col|
         if row <= 1 || row >= 6
-          board[row][col] = Piece.new([row, col], @board.dup) 
+          board[row][col] = Piece.new(self, [row, col]) 
         end
       end 
     end 
@@ -63,6 +67,9 @@ class Board
     end
   end 
  
+  private
+
+  attr_reader :sentinel
 
 end 
 

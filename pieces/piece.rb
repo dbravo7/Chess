@@ -1,31 +1,41 @@
 class Piece
  
-attr_reader :color, :position, :board 
+attr_reader :color, :pos, :board 
 
-  def initialize(color, board, position)
+  def initialize(color, board, pos)
     @board = board
-    @color = color #symbol 
-    @position = position
+    @color = color 
+    @pos = position
   end 
 
-  def []=(pos, val)
-    x, y = pos 
-    @board[x][y] = val 
+  def pos=(val)
+    x, y = val
+    pos = [x, y]
   end 
-
-  
 
   def to_s
-    "#{@color}"
+    " #{symbol} "
   end 
 
   def empty? 
-
+    false 
+  end 
+  
+  def symbol
+    # subclass implements this method
+    raise NotImplementedError 
   end 
 
-  def moves 
+  def valid_moves 
+    move_dirs 
     # should return an array of places a Piece can move to 
     # Pieces move differently so will have to implement with subclasses
+  end 
+
+  private
+
+  def move_into_check?(end_pos)
+
   end 
 
 end 
