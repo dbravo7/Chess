@@ -49,24 +49,37 @@ class Board
     board 
   end 
 
-  def valid_move(start, end_pos)
-    if self[start].is_a?(NullPiece)  
-      raise "There is no piece at this start position" 
-    elsif !self[end_pos].is_a?(NullPiece)
-      raise "The end_pos is already occupied by a piece"
-    end 
+  def valid_pos?(end_pos)
+    x, y = end_pos 
+    x.between?(0,7) && y.between?(0,7)
+  end 
+  
+  def add_piece(piece, pos)
+
   end 
 
-  def move_piece(start_pos, end_pos)
+  def move_piece(color, start_pos, end_pos)
     begin 
-      valid_move(start_pos, end_pos) 
-      self[start_pos], self[end_pos] = self[end_pos], self[start_pos]
+      @display.get_input 
+      if self[start_pos].is_a?(NullPiece)
+        raise "There is no piece at this position"
+      elsif self[start_pos].color != color
+        raise "This is not your piece"
+      elsif self[end_pos].color == color
+        raise "One of your own pieces is occupying this position"
+      end   
+      !move_piece(color, start_pos, end_pos)
     rescue ArgumentError
-      puts "Please input new coordinates"
+      puts "Please choose a different position"
       retry 
     end
   end 
- 
+
+  def !move_piece(color, start_pos, end_pos)
+    end_pos = start_pos
+    start_pos = @sentinel 
+  end 
+
   private
 
   attr_reader :sentinel

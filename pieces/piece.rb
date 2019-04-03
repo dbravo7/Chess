@@ -8,9 +8,9 @@ attr_reader :color, :pos, :board
     @pos = position
   end 
 
-  def pos=(val)
-    x, y = val
-    pos = [x, y]
+  def []=(pos, val)
+    x, y = pos
+    board[pos] = val 
   end 
 
   def to_s
