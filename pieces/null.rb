@@ -2,6 +2,7 @@ require "singleton"
 require_relative "piece"
 
 class NullPiece < Piece
+  attr_reader :symbol 
   include Singleton
 
   def initialize
@@ -13,7 +14,8 @@ class NullPiece < Piece
     []
   end 
 
-  def symbol
-    " " 
+  def empty?
+    true
   end 
+  
 end 
