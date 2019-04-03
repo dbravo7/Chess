@@ -13,20 +13,21 @@ attr_reader :cursor_pos, :board
 
   def render 
     system("clear")
-    @board.each_with_index do |subArr, row|
+    puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
+    @board.each_with_index do |subArr, x|
         rendered = []
       subArr.each_with_index do |piece, y|
-        if @cursor.cursor_pos == piece.position && @cursor.selected == false 
-          rendered << piece.to_s.colorize(:background=>:light_blue) 
-        elsif @cursor.cursor_pos == piece.position && @cursor.selected == true 
-            rendered << piece.to_s.colorize(:background=>:light_red)   
-        elsif row.even? && y.odd? || row.odd? && y.even? 
+        if @cursor.cursor_pos == [x, y] && @cursor.selected == false 
+          rendered << board[x][y].to_s.colorize(:background=>:light_blue) 
+        elsif @cursor.cursor_pos == [x, y] && @cursor.selected == true 
+          rendered << board[x][y].to_s.colorize(:background=>:light_red)   
+        elsif x.even? && y.odd? || x.odd? && y.even? 
           rendered << piece.to_s.colorize(:background=>:light_green)
         else
           rendered << piece.to_s.colorize(:background=>:light_yellow)
         end 
         end 
-      puts "#{row + 1}".colorize(:cyan) + "|" + rendered.join(" ")
+      puts "#{x + 1}".colorize(:cyan) + "|" + rendered.join("")
     end 
     puts "  #{("a".."h").to_a.join(" ").reverse}".colorize(:cyan)
     test_loop
