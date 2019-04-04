@@ -5,7 +5,7 @@ attr_reader :color, :pos, :board
   def initialize(color, board, pos)
     @board = board
     @color = color 
-    @pos = position
+    @pos = pos
   end 
 
   def []=(pos, val)

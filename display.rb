@@ -29,7 +29,7 @@ attr_reader :cursor_pos, :board
         end 
       puts "#{x + 1}".colorize(:cyan) + "|" + rendered.join("")
     end 
-    puts "  #{("a".."h").to_a.join(" ").reverse}".colorize(:cyan)
+    puts "   #{("a".."h").to_a.join("  ").reverse}".colorize(:cyan)
     test_loop
   end 
 

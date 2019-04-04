@@ -11,12 +11,15 @@ class Board
     @board = board
     populate_grid(@board)
     @display = Display.new(@board)
-    # move_piece([0,0],[4,2])
     display_test_loop
   end 
 
   def display_test_loop
     display.render
+  end 
+
+  def pieces
+    @board.flatten.reject(&:empty?)
   end 
 
   def [](pos)
@@ -41,21 +44,37 @@ class Board
   def populate_grid(board)
     board.each_with_index do |subArr, row|
      board.each_with_index do |ele, col|
-        if row <= 1 || row >= 6
-          board[row][col] = Piece.new(self, [row, col]) 
+        if row == 1 
+          board[row][col] = Pawn.new(:white, self, [row, col])
+        elsif row == 6
+          board[row][col] = Pawn.new(:black, self, [row, col])
+        elsif row == 0 || row == 7
+          board[row][col] = add_piece([row,col]) 
         end
       end 
     end 
     board 
+    # debugger 
   end 
 
   def valid_pos?(end_pos)
     x, y = end_pos 
-    x.between?(0,7) && y.between?(0,7)
+    x.between?(0, 7) && y.between?(0, 7)
   end 
   
-  def add_piece(piece, pos)
-
+  def add_piece(pos)
+    color = (pos.first == 0) ? :white : :black 
+    if pos.last == 7 || pos.last == 0
+      return Rook.new(color, self, pos)
+    elsif pos.last == 6 || pos.last == 1
+      return Knight.new(color, self, pos)
+    elsif pos.last == 5 || pos.last == 2
+      return Bishop.new(color, self, pos)
+    elsif pos.last == 3 
+      return King.new(color, self, pos)
+    elsif pos.last == 4
+      return Queen.new(color, self, pos)
+    end 
   end 
 
   def move_piece(color, start_pos, end_pos)
@@ -68,17 +87,51 @@ class Board
       elsif self[end_pos].color == color
         raise "One of your own pieces is occupying this position"
       end   
-      !move_piece(color, start_pos, end_pos)
+      move_piece!(color, start_pos, end_pos)
     rescue ArgumentError
       puts "Please choose a different position"
       retry 
     end
   end 
 
-  def !move_piece(color, start_pos, end_pos)
+  def move_piece!(color, start_pos, end_pos)
     end_pos = start_pos
     start_pos = @sentinel 
   end 
+
+  def in_check?(color)
+    king_pos = find_king(color)
+    pieces.any? do |p|
+      if p.color != color && p.valid_moves.include?(king_pos) 
+        return true
+      end 
+    end 
+    false 
+  end 
+
+  def find_king(color)
+    pieces.each do |p|
+      if p.class.is_a?(King) && p.color == color
+        p.pos
+      end 
+    end
+    raise "No king was found" 
+  end 
+
+  def checkmate?(color)
+    if !in_check?(color)
+      return false 
+    end 
+    king_piece_pos = find_king(color)
+    king_piece_pos.valid_moves.each do |pos|
+      pieces.any? do |p| 
+       if p.color != color && !p.valid_moves.include?(pos) 
+        return false
+      end 
+    end 
+    true 
+  end 
+
 
   private
 

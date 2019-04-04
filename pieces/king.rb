@@ -1,11 +1,11 @@
 require_relative "piece"
 require_relative "stepable"
 
-class King
+class King < Piece 
   include Stepable
 
   def symbol
-    "♔".colorize(color)
+    "♚".colorize(color)
   end
   
   protected

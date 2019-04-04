@@ -2,7 +2,7 @@ require_relative "piece"
 class Pawn < Piece
 
   def symbol
-     "♙".colorize(color)
+     "♙".colorize(color).bold 
   end 
 
   def move_dirs

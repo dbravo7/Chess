@@ -116,6 +116,6 @@ class Cursor
 
   def valid_pos?(pos)
     x, y = pos
-    x >= 0 && x <= 7 && y >= 0 && y <= 7
+    x.between?(0, 7) && y.between?(0, 7)
   end 
 end

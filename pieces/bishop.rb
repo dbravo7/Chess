@@ -1,10 +1,11 @@
 require_relative "piece"
 require_relative "slideable"
 
-class Bishop
+class Bishop < Piece
+  include Slideable 
 
   def symbol
-    "♗".colorize(color)
+    "♝".colorize(color)
   end 
 
   protected
