@@ -11,7 +11,8 @@ class Board
     @board = board
     populate_grid(@board)
     @display = Display.new(@board)
-    display_test_loop
+    # board_dup 
+    # display_test_loop
   end 
 
   def display_test_loop
@@ -79,13 +80,14 @@ class Board
 
   def move_piece(color, start_pos, end_pos)
     begin 
-      @display.get_input 
       if self[start_pos].is_a?(NullPiece)
         raise "There is no piece at this position"
       elsif self[start_pos].color != color
         raise "This is not your piece"
       elsif self[end_pos].color == color
         raise "One of your own pieces is occupying this position"
+      elsif self[start_pos].valid_moves.length > 1
+        raise "There are no valid moves for this piece"
       end   
       move_piece!(color, start_pos, end_pos)
     rescue ArgumentError
@@ -127,11 +129,17 @@ class Board
       pieces.any? do |p| 
        if p.color != color && !p.valid_moves.include?(pos) 
         return false
+       end 
       end 
     end 
     true 
   end 
 
+  def board_dup
+    board = @board.dup
+    board 
+    # debugger 
+  end 
 
   private
 
