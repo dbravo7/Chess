@@ -27,15 +27,16 @@ attr_reader :color, :pos, :board
   end 
 
   def valid_moves 
-    move_dirs 
-    # should return an array of places a Piece can move to 
-    # Pieces move differently so will have to implement with subclasses
+    moves.select {|end_pos| move_into_check?(end_pos)}
   end 
 
   private
 
   def move_into_check?(end_pos)
-
+    board_dup = board.board_dup  
+    
+    board_dup[end_pos] = self 
+    board_dup.in_check?(color)
   end 
 
 end 
