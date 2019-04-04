@@ -1,6 +1,5 @@
 require "byebug"
 require_relative "pieces"
-require_relative "display"
 
 class Board
 
@@ -8,15 +7,8 @@ class Board
 
   def initialize 
     @sentinel = NullPiece.instance 
-    @board = board
-    populate_grid(@board)
-    @display = Display.new(@board)
-    # board_dup 
-    # display_test_loop
-  end 
-
-  def display_test_loop
-    display.render
+    @board = populate_grid(board)
+    
   end 
 
   def pieces
@@ -55,7 +47,6 @@ class Board
       end 
     end 
     board 
-    # debugger 
   end 
 
   def valid_pos?(end_pos)
@@ -79,7 +70,6 @@ class Board
   end 
 
   def move_piece(color, start_pos, end_pos)
-    begin 
       if self[start_pos].is_a?(NullPiece)
         raise "There is no piece at this position"
       elsif self[start_pos].color != color
@@ -89,11 +79,7 @@ class Board
       elsif self[start_pos].valid_moves.length > 1
         raise "There are no valid moves for this piece"
       end   
-      move_piece!(color, start_pos, end_pos)
-    rescue ArgumentError
-      puts "Please choose a different position"
-      retry 
-    end
+    move_piece!(color, start_pos, end_pos)
   end 
 
   def move_piece!(color, start_pos, end_pos)
