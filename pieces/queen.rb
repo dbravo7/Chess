@@ -5,7 +5,7 @@ class Queen < Piece
   include Slideable 
 
   def symbol
-    "♛".colorize(color)
+    color == :white ? "♕" : "♛"
   end 
 
   protected

@@ -5,12 +5,12 @@ class King < Piece
   include Stepable
 
   def symbol
-    "♚".colorize(color)
+    color == :white ? "♔" : "♚"
   end
   
   protected
 
-  def move_diffs
+  def move_diff
     [
      [0, 1],
      [0,-1],

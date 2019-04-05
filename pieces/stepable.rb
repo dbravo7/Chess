@@ -2,10 +2,11 @@ module Stepable
 
   def moves
     moves = []
-    move_diffs.each do |pos_x, pos_y|
+    self.move_diff.each do |pos_x, pos_y|
       x, y = pos 
       new_move = [x + pos_x, y + pos_y]
-      if board[new_move].empty? || board[new_move].color != board[pos].color
+      if board.valid_pos?(new_move) && 
+        (board[new_move].empty? || board[new_move].color != board[pos].color)
         moves << new_move 
       end 
     end 
@@ -14,7 +15,7 @@ module Stepable
 
   private
 
-  def move_diffs 
+  def move_diff
     # implemented by subclass
     raise NoMethodError
   end 

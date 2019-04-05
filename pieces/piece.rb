@@ -29,16 +29,16 @@ attr_reader :color, :pos, :board
   end 
 
   def valid_moves 
-    moves.select {|end_pos| move_into_check?(end_pos)}
+    moves.reject {|end_pos| move_into_check?(end_pos)}
+    debugger
   end 
 
   private
 
   def move_into_check?(end_pos)
     x, y = end_pos
-    test_board = board.board_dup  
-    debugger 
-    test_board.move_piece!(self.pos, end_pos) 
+    test_board = board.board_dup   
+    test_board.move_piece!(pos, end_pos)
     test_board.in_check?(color)
   end 
 

@@ -4,7 +4,7 @@ require_relative "cursor"
 
 class Display 
 
-attr_reader :cursor_pos, :board 
+attr_reader :cursor, :board 
 
   def initialize(board) 
     @cursor = Cursor.new([0,0], board)
@@ -20,35 +20,37 @@ attr_reader :cursor_pos, :board
     @show_debug == false ? true : false 
   end 
 
-  def puts_debug
-    pos = @cursor.cursor_pos
-    if @show_debug
-      puts "Available moves:#{board[pos].moves}"
-      puts "Check? #{board.in_check?(@cursor.cursor_pos.color)}"
+  def puts_debug(pos)
+    if @show_debug && pos 
+      puts "Available moves:#{num_lett_conversion(board[pos].moves)}"
+      puts "Check? #{board.in_check?(board[pos].color)}"
     end 
   end 
+
+  def num_lett_conversion(arr)
+
 
   def render 
     system("clear")
     puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
     @board.board.each_with_index do |subArr, x|
         rendered = []
-      subArr.each_with_index do |piece, y|
+      subArr.each_with_index do |piece, y| 
         if @cursor.cursor_pos == [x, y] && @cursor.selected == false 
-          rendered << board.board[x][y].to_s.colorize(:background=>:light_blue) 
+          rendered << @board.board[x][y].to_s.colorize(:background=>:light_blue) 
         elsif @cursor.cursor_pos == [x, y] && @cursor.selected == true 
-          rendered << board.board[x][y].to_s.colorize(:background=>:light_red)   
+          rendered << @board.board[x][y].to_s.colorize(:background=>:light_red)   
         elsif x.even? && y.odd? || x.odd? && y.even? 
-          rendered << piece.to_s.colorize(:background=>:light_green)
+          rendered << piece.to_s.colorize(:background=>:grey)
         else
-          rendered << piece.to_s.colorize(:background=>:light_yellow)
+          rendered << piece.to_s.colorize(:background=>:white)
         end 
         end 
       puts "#{x + 1}".colorize(:cyan) + "|" + rendered.join("")
     end 
     puts "   #{("a".."h").to_a.join("  ").reverse}".colorize(:cyan)
     puts ""
-    puts_debug
+    # puts_debug
   end 
 
 end 

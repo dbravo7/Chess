@@ -3,7 +3,7 @@ require_relative "pieces"
 
 class Board
 
-  attr_reader :board, :display 
+  attr_reader :board
 
   def initialize 
     @sentinel = NullPiece.instance 
@@ -23,7 +23,6 @@ class Board
   def []=(pos, value) 
     x, y = pos
     @board[x][y] = value 
-    self[pos].position = pos  
   end 
 
   def empty?(pos)
@@ -46,7 +45,7 @@ class Board
         elsif row == 6
           Pawn.new(:black, self, [row, col])
         elsif row == 0 || row == 7
-          non_pawn_piece([row,col]) 
+          non_pawn_pieces([row,col]) 
         end
       end 
     end 
@@ -58,7 +57,7 @@ class Board
     x.between?(0, 7) && y.between?(0, 7)
   end 
   
-  def non_pawn_piece(pos)
+  def non_pawn_pieces(pos)
     color = (pos.first == 0) ? :white : :black 
     if pos.last == 7 || pos.last == 0
       return Rook.new(color, self, pos)
@@ -75,26 +74,27 @@ class Board
 
   def move_piece(color, start_pos, end_pos)
       if self[start_pos].is_a?(NullPiece)
-        raise "There is no piece at this position"
+        raise ArgumentError.new "There is no piece at this position"
       elsif self[start_pos].color != color
-        raise "This is not your piece"
+        raise ArgumentError.new "This is not your piece"
       elsif self[end_pos].color == color
-        raise "One of your own pieces is occupying this position"
-      elsif self[start_pos].valid_moves.length > 1
-        raise "There are no valid moves for this piece"
+        raise ArgumentError.new "One of your own pieces is occupying this position"
+      elsif self[start_pos].moves.length < 1
+        raise ArgumentError.new "There are no valid moves for this piece"
       end   
     move_piece!(start_pos, end_pos)
   end 
 
   def move_piece!(start_pos, end_pos)
-    end_pos = start_pos
-    start_pos = @sentinel 
+    self[end_pos] = self[start_pos]
+    self[start_pos] = @sentinel 
   end 
 
   def in_check?(color)
     king_pos = find_king(color)
+    debugger 
     pieces.any? do |p|
-      if p.color != color && p.valid_moves.include?(king_pos) 
+      if p.color != color && p.moves.include?(king_pos) 
         return true
       end 
     end 

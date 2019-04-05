@@ -15,10 +15,10 @@ class Game
   end 
 
   def play
-    display.render 
-    until board.checkmate?(players.first.color)
-        debugger 
-      prompt 
+    debugger 
+    until @board.checkmate?(players.first.color)
+      display.render 
+      # prompt 
       move_piece 
       swap_turn
     end 
@@ -28,24 +28,26 @@ class Game
 
   def move_piece
     begin
-      start_pos, end_pos = players.first.make_move 
+      start_pos, end_pos = players.first.make_move(board) 
       board.move_piece(players.first.color, start_pos, end_pos)
-    rescue ArgumentError 
+    rescue ArgumentError => e
       puts "Please choose another position"
+      puts "#{e.message}"
+      sleep(1.5)
     retry 
     end 
   end 
 
   private 
 
-  def prompt
-    puts "#{players.first.color}'s move"
-    sleep(1.5)
-  end 
+  # def prompt
+  #   puts "#{players.first.color}'s move"
+  #   sleep(1.5)
+  # end 
 
   def swap_turn
     # All game methods call on the firs ele in the arr for the next move 
-   players.first, players.last = players.last, players.first
+   players[0], players[1] = players[1], players[0]
   end 
 end 
 
