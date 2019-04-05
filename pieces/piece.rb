@@ -6,6 +6,8 @@ attr_reader :color, :pos, :board
     @board = board
     @color = color 
     @pos = pos
+
+    board.add_piece(self, pos) 
   end 
 
   def []=(pos, val)
@@ -33,10 +35,11 @@ attr_reader :color, :pos, :board
   private
 
   def move_into_check?(end_pos)
-    board_dup = board.board_dup  
-    
-    board_dup[end_pos] = self 
-    board_dup.in_check?(color)
+    x, y = end_pos
+    test_board = board.board_dup  
+    debugger 
+    test_board.move_piece!(self.pos, end_pos) 
+    test_board.in_check?(color)
   end 
 
 end 

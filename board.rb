@@ -7,8 +7,8 @@ class Board
 
   def initialize 
     @sentinel = NullPiece.instance 
-    @board = populate_grid(board)
-    
+    @board = grid
+    populate_grid(@board)
   end 
 
   def pieces
@@ -30,23 +30,27 @@ class Board
     self[pos].empty? 
   end 
 
-  def board 
+  def grid 
     board = Array.new(8) {Array.new(8, @sentinel)} 
   end 
 
-  def populate_grid(board)
-    board.each_with_index do |subArr, row|
-     board.each_with_index do |ele, col|
+  def add_piece(piece, pos)
+    self[pos] = piece
+  end 
+
+  def populate_grid(grid)
+    grid.each_with_index do |subArr, row|
+     subArr.each_with_index do |ele, col|
         if row == 1 
-          board[row][col] = Pawn.new(:white, self, [row, col])
+          Pawn.new(:white, self, [row, col])
         elsif row == 6
-          board[row][col] = Pawn.new(:black, self, [row, col])
+          Pawn.new(:black, self, [row, col])
         elsif row == 0 || row == 7
-          board[row][col] = add_piece([row,col]) 
+          non_pawn_piece([row,col]) 
         end
       end 
     end 
-    board 
+    @board 
   end 
 
   def valid_pos?(end_pos)
@@ -54,7 +58,7 @@ class Board
     x.between?(0, 7) && y.between?(0, 7)
   end 
   
-  def add_piece(pos)
+  def non_pawn_piece(pos)
     color = (pos.first == 0) ? :white : :black 
     if pos.last == 7 || pos.last == 0
       return Rook.new(color, self, pos)
@@ -79,10 +83,10 @@ class Board
       elsif self[start_pos].valid_moves.length > 1
         raise "There are no valid moves for this piece"
       end   
-    move_piece!(color, start_pos, end_pos)
+    move_piece!(start_pos, end_pos)
   end 
 
-  def move_piece!(color, start_pos, end_pos)
+  def move_piece!(start_pos, end_pos)
     end_pos = start_pos
     start_pos = @sentinel 
   end 
@@ -98,9 +102,9 @@ class Board
   end 
 
   def find_king(color)
-    pieces.each do |p|
-      if p.class.is_a?(King) && p.color == color
-        p.pos
+    pieces.find do |p|
+      if p.is_a?(King) && p.color == color
+        return p.pos
       end 
     end
     raise "No king was found" 
@@ -122,9 +126,12 @@ class Board
   end 
 
   def board_dup
-    board = @board.dup
-    board 
-    # debugger 
+    test_board = Board.new
+    
+    pieces.each do |p|
+      p.class.new(p.color, test_board, p.pos)
+    end 
+    test_board
   end 
 
   private
