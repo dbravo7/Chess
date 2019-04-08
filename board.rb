@@ -34,6 +34,7 @@ class Board
   end 
 
   def add_piece(piece, pos)
+    # debugger 
     self[pos] = piece
   end 
 
@@ -97,7 +98,6 @@ class Board
 
   def in_check?(color)
     king_pos = find_king(color)
-    # debugger 
     pieces.any? do |p|
       if p.color != color && p.moves.include?(king_pos) 
         return true

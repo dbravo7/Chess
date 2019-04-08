@@ -39,6 +39,7 @@ attr_accessor :pos
     x, y = end_pos
     test_board = board.board_dup   
     test_board.move_piece!(pos, end_pos)
+    # debugger 
     test_board.in_check?(color)
   end 
 
