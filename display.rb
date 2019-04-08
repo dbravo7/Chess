@@ -20,15 +20,33 @@ attr_reader :cursor, :board
     @show_debug == false ? true : false 
   end 
 
-  def puts_debug(pos)
+  def puts_debug(pos, color)
     if @show_debug && pos 
-      puts "Available moves:#{num_lett_conversion(board[pos].moves)}"
-      puts "Check? #{board.in_check?(board[pos].color)}"
+      puts "Available moves: #{num_lett_conversion(board[pos].valid_moves)}"
+    else 
+      puts "In Check? #{board.in_check?(color)}"
     end 
   end 
 
   def num_lett_conversion(arr)
-
+    lett = {
+      0=>"h",
+      1=>"g",
+      2=>"f",
+      3=>"e",
+      4=>"d",
+      5=>"c",
+      6=>"b",
+      7=>"a"
+    }
+    new_arr = []
+    arr.each_with_index do |coord, idx|
+      coord[0] += 1 
+      coord[1] = lett[coord[1]]
+      new_arr << arr[idx].join("")
+    end
+    new_arr.join(" ")
+  end 
 
   def render 
     system("clear")
@@ -50,7 +68,6 @@ attr_reader :cursor, :board
     end 
     puts "   #{("a".."h").to_a.join("  ").reverse}".colorize(:cyan)
     puts ""
-    # puts_debug
   end 
 
 end 

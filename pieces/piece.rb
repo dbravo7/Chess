@@ -1,6 +1,7 @@
 class Piece
  
-attr_reader :color, :pos, :board 
+attr_reader :color, :board 
+attr_accessor :pos 
 
   def initialize(color, board, pos)
     @board = board
@@ -30,7 +31,6 @@ attr_reader :color, :pos, :board
 
   def valid_moves 
     moves.reject {|end_pos| move_into_check?(end_pos)}
-    debugger
   end 
 
   private

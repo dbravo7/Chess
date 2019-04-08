@@ -49,6 +49,7 @@ class Board
         end
       end 
     end 
+    # debugger 
     @board 
   end 
 
@@ -73,26 +74,30 @@ class Board
   end 
 
   def move_piece(color, start_pos, end_pos)
-      if self[start_pos].is_a?(NullPiece)
+    piece = self[start_pos]
+      if piece.is_a?(NullPiece)
         raise ArgumentError.new "There is no piece at this position"
-      elsif self[start_pos].color != color
+      elsif piece.color != color
         raise ArgumentError.new "This is not your piece"
       elsif self[end_pos].color == color
         raise ArgumentError.new "One of your own pieces is occupying this position"
-      elsif self[start_pos].moves.length < 1
+      elsif piece.valid_moves.empty? 
         raise ArgumentError.new "There are no valid moves for this piece"
+      elsif !piece.valid_moves.include?(end_pos)
+        raise ArgumentError.new "Not a valid move for this piece"
       end   
     move_piece!(start_pos, end_pos)
   end 
 
   def move_piece!(start_pos, end_pos)
     self[end_pos] = self[start_pos]
+    self[end_pos].pos = end_pos 
     self[start_pos] = @sentinel 
   end 
 
   def in_check?(color)
     king_pos = find_king(color)
-    debugger 
+    # debugger 
     pieces.any? do |p|
       if p.color != color && p.moves.include?(king_pos) 
         return true
@@ -115,7 +120,7 @@ class Board
       return false 
     end 
     king_piece_pos = find_king(color)
-    king_piece_pos.valid_moves.each do |pos|
+    self[king_piece_pos].moves.each do |pos|
       pieces.any? do |p| 
        if p.color != color && !p.valid_moves.include?(pos) 
         return false

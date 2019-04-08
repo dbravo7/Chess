@@ -15,7 +15,6 @@ class Game
   end 
 
   def play
-    debugger 
     until @board.checkmate?(players.first.color)
       display.render 
       # prompt 

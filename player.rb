@@ -15,16 +15,16 @@ class HumanPlayer
     until start_pos && end_pos
       display.render
       puts "#{color}'s turn" 
-      puts display.puts_debug(start_pos)
+      puts display.puts_debug(start_pos, color)
       if !start_pos
         puts "Choose the piece you would like to move"
+        # debugger 
         start_pos = @display.cursor.get_input  
       elsif !end_pos
         puts "Choose where you would like to move the piece" 
         end_pos = @display.cursor.get_input  
       end 
     end 
-    # debugger 
     [start_pos, end_pos]  
   end 
 
